@@ -2,7 +2,11 @@
 from selenium  import webdriver
 from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.chrome.service import Service
-
+import os
+from dotenv import load_dotenv
+from time import sleep
+env_path = "C:\\env\\.env"  
+load_dotenv(dotenv_path=env_path)
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from time import sleep
@@ -17,19 +21,26 @@ import tkinter as tk
 from tkinter import messagebox
 import shutil
 from datetime import datetime
-
+import os 
 today = datetime.now()
 current_hour = today.strftime("%H-%M")  # Using dashes instead of colons
 formatted_date = today.strftime(f"{current_hour} %d-%m-%Y")
-source_file = r'\\10.199.199.35\soc team\SOC_Daily Report\2023\NXThink\Nexthink_new.xlsx'
-destination_file = r"\\10.199.199.35\soc team\Abdelrahman Ataa\Backup/" + formatted_date + ".xlsx"
-shutil.copyfile(source_file, destination_file)
+source_file = os.getenv("source_file")
+# destination_file = r"\\10.199.199.35\soc team\Abdelrahman Ataa\Backup/" + formatted_date + ".xlsx"
+destination_file = f'{os.getenv("destination_file")}\{formatted_date}.xlsx"'
+# print(os.getenv("destination_file"))
+# print(os.getenv("source_file"))
+# print(os.getenv("geckodriver"))
+# print(os.getenv("chromedriver"))
+# print(os.getenv("sheet_path"))
+# sleep(5)
+# shutil.copyfile(source_file, destination_file)
 
 class InstaBot:
     def __init__(self,username,password):  
         #webdriver
         try:
-            serv_obj = service= Service(r'\\10.199.199.35\soc team\Abdelrahman Ataa\Nxthink\dist\geckodriver.exe')
+            serv_obj = service= Service(os.getenv("geckodriver"))
             ops=webdriver.FirefoxOptions()
             self.driver = webdriver.Firefox(service=serv_obj,options=ops)
             #launch
@@ -39,7 +50,7 @@ class InstaBot:
             messagebox.showerror("Error", f"There is problem with geckodriver.exe or problem with internet \n  geckodriver هنالك مشكلة بالانترنت او بملف ")
             #try to use chromedriver instead
             try:
-                serv_obj = service= Service(r'\\10.199.199.35\soc team\Abdelrahman Ataa\Nxthink\dist\chromedriver.exe')
+                serv_obj = service= Service(os.getenv("chromedriver"))
                 ops=webdriver.ChromeOptions()
                 self.driver = webdriver.Chrome(service=serv_obj,options=ops)
                 #launch
@@ -50,7 +61,9 @@ class InstaBot:
                 return
         try:
             self.username= username
+            sleep(1)
             self.password= password
+            sleep(1)
             #username
             self.driver.find_element(By.XPATH, "//input[@id='LS_username_input']").send_keys(username)
             #password
@@ -73,10 +86,10 @@ class InstaBot:
         self.driver.find_element(By.XPATH, "//button[@id='TNV_ok_button']").click()
         sleep(1)
         item = self.driver.find_element(By.XPATH, "//div[@id='TNV_backward_img']")
-        for i in range(1,25):
+        for i in range(1,13):
             item.click()
         #gg
-        for i in range(1,25):
+        for i in range(1,13):
             current_time =  self.driver.find_element(By.XPATH, "//span[@id='TNV_date_text']").text
             current_day = self.driver.find_element(By.XPATH, "//span[@id='TNV_scope_text']").text
 
@@ -108,7 +121,7 @@ class InstaBot:
                         pass 
                     else:
                         try:
-                            sheet_path = r'\\10.199.199.35\soc team\SOC_Daily Report\2023\NXThink\Nexthink_new.xlsx'
+                            sheet_path = os.getenv("sheet_path")
                             wb = openpyxl.load_workbook(sheet_path)
                             sheet = wb['Sheet1']   
 
@@ -178,9 +191,10 @@ class InstaBot:
 
 
 
-
-
-mybot=InstaBot("w_abdelrahman.ataa", "a1591997A!")
+username = os.getenv("name")
+passwd =  os.getenv("passwd")
+print(f"{username}: {passwd}")
+mybot=InstaBot(username, passwd)
 mybot.get_tickets_data()
 mybot.Quit()
 
