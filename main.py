@@ -17,24 +17,13 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import WebDriverException
 from selenium.common.exceptions import StaleElementReferenceException
 from datetime import date, timedelta
-import tkinter as tk
-from tkinter import messagebox
-import shutil
 from datetime import datetime
 import os 
 today = datetime.now()
-current_hour = today.strftime("%H-%M")  # Using dashes instead of colons
+current_hour = today.strftime("%H-%M") 
 formatted_date = today.strftime(f"{current_hour} %d-%m-%Y")
 source_file = os.getenv("source_file")
-# destination_file = r"\\10.199.199.35\soc team\Abdelrahman Ataa\Backup/" + formatted_date + ".xlsx"
 destination_file = f'{os.getenv("destination_file")}\{formatted_date}.xlsx"'
-# print(os.getenv("destination_file"))
-# print(os.getenv("source_file"))
-# print(os.getenv("geckodriver"))
-# print(os.getenv("chromedriver"))
-# print(os.getenv("sheet_path"))
-# sleep(5)
-# shutil.copyfile(source_file, destination_file)
 
 class InstaBot:
     def __init__(self,username,password):  
@@ -47,7 +36,7 @@ class InstaBot:
             self.driver.get("https://nxportal.egyptpost.local")
             self.driver.implicitly_wait(10)
         except Exception as e :
-            messagebox.showerror("Error", f"There is problem with geckodriver.exe or problem with internet \n  geckodriver هنالك مشكلة بالانترنت او بملف ")
+            print( f"There is problem with geckodriver.exe or problem with internet \n  geckodriver هنالك مشكلة بالانترنت او بملف ")
             #try to use chromedriver instead
             try:
                 serv_obj = service= Service(os.getenv("chromedriver"))
@@ -57,7 +46,7 @@ class InstaBot:
                 self.driver.get("https://nxportal.egyptpost.local")
                 self.driver.implicitly_wait(15)
             except Exception as e :
-                messagebox.showerror("Error", f"There is problem with chromedriver.exe or problem with internet \n  chromedriver هنالك مشكلة بالانترنت او بملف ")
+                print( f"There is problem with chromedriver.exe or problem with internet \n  chromedriver هنالك مشكلة بالانترنت او بملف ")
                 return
         try:
             self.username= username
@@ -73,7 +62,7 @@ class InstaBot:
             self.driver.maximize_window()
             sleep(10)
         except Exception as e :
-            messagebox.showerror("Error","Username or password uncorrecty or can't reach the page \n هنالك مشكلة بالانترنت او ان الاميل أوالباسورد خطأ")
+            print("Username or password uncorrecty or can't reach the page \n هنالك مشكلة بالانترنت او ان الاميل أوالباسورد خطأ")
             return
 
 
@@ -107,7 +96,7 @@ class InstaBot:
                     sleep(2)
                     self.driver.find_element(By.XPATH, "//ul[@aria-label='Egypt Post Main Services']//li["+str(ser)+"]").click()
                 except Exception as e:
-                    messagebox.showerror("Error","there's problem with menu page and can't reach  \n هنالك مشكلة بالصفحة الرئيسية ولا يستطع الوصول الي صفحة الانتقالات")
+                    print("there's problem with menu page and can't reach  \n هنالك مشكلة بالصفحة الرئيسية ولا يستطع الوصول الي صفحة الانتقالات")
                     return
                 row = 2
                 for row in range(row,12):
@@ -115,7 +104,7 @@ class InstaBot:
                         Devices_issues= self.driver.find_element(By.XPATH, "//body[1]/div[1]/div[1]/div[2]/div[3]/div[1]/div[1]/div[1]/div[6]/div[6]/div[2]/div[1]/div[2]/div[1]/div[1]/div[3]/div[4]/div[1]/div[1]/table[1]/tbody[1]/tr["+str(row)+"]/td[2]")
                         print(Devices_issues.text)
                     except Exception as e:
-                        messagebox.showerror("Error","theres problem with getting devices issues\n لا يستطيع الوصول الي المشاكل الموجودة ")
+                        print("theres problem with getting devices issues\n لا يستطيع الوصول الي المشاكل الموجودة ")
                         return
                     if Devices_issues.text == '0':
                         pass 
@@ -167,21 +156,21 @@ class InstaBot:
                             try:
                                 wb.save(sheet_path)
                             except FileNotFoundError as e:
-                                messagebox.showerror("Error","File not found\n الفايل راح فين ؟ بطلو لعب ")
+                                print("File not found\n الفايل راح فين ؟ بطلو لعب ")
                                 return
                             except PermissionError as e:
-                                messagebox.showerror("Error","Permission denied\n لا يوجد صلاحية للتعديل يمكن ان يكون الشيت مفتوح ")
+                                print("Permission denied\n لا يوجد صلاحية للتعديل يمكن ان يكون الشيت مفتوح ")
                             except ValueError as e:
-                                messagebox.showerror("Error","Invalid value")
+                                print("Invalid value")
                             except Exception as e:
-                                messagebox.showerror("Error","فيه مشكلة بالشيت ياسطا")
+                                print("فيه مشكلة بالشيت ياسطا")
                                 return
                         except NoSuchElementException as e:
-                            messagebox.showerror("Error","Element not found\n لا يستطيع الوصول لعنصر بالموقع")
+                            print("Element not found\n لا يستطيع الوصول لعنصر بالموقع")
                         except StaleElementReferenceException as e:
-                            messagebox.showerror("Error","Element is no longer attached to the DOM")
+                            print("Element is no longer attached to the DOM")
                         except WebDriverException as e:
-                            messagebox.showerror("Error","An unexpected error occurred during the operation")
+                            print("An unexpected error occurred during the operation")
                             return
             self.driver.find_element(By.XPATH, "//div[@id='TNV_forward_img']").click()
 

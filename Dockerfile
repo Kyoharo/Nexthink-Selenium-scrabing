@@ -1,15 +1,12 @@
-
-FROM python:3.9
+FROM public.ecr.aws/docker/library/python:3.12.1-slim
 
 WORKDIR /app
 
+# Copy all files to the container's /app directory
 COPY . .
 
+# Install dependencies
 RUN pip install -r requirements.txt
-
-# Optional: Copy additional files (like geckodriver or chromedriver)
-COPY geckodriver /app/geckodriver 
-COPY chromedriver /app/chromedriver 
 
 
 ENTRYPOINT ["python", "main.py"]
